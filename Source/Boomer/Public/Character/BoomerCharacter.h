@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "BoomerTypes/TurningInPlace.h"
 #include "GameFramework/Character.h"
 #include "BoomerCharacter.generated.h"
 
@@ -61,6 +62,9 @@ private:
 	float AO_Pitch;
 	FRotator StartingAimRotation;
 
+	ETurningInPlace TurningInPlace;
+	void TurnInPlace(float DeltaTime);
+
 public:	
 	void SetOverlappingWeapon(AWeapon* Weapon);
 	bool IsWeaponEquipped();
@@ -68,5 +72,6 @@ public:
 	AWeapon* GetEquippedWeapon();
 	
 	FORCEINLINE float GetAOYaw() const { return AO_Yaw; }
-	FORCEINLINE float GetAOPitch() const { return AO_Pitch; }	
+	FORCEINLINE float GetAOPitch() const { return AO_Pitch; }
+	FORCEINLINE ETurningInPlace GetTurningInPlace() const { return TurningInPlace; }
 };

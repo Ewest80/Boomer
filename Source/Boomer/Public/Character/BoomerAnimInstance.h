@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Animation/AnimInstance.h"
+#include "BoomerTypes/TurningInPlace.h"
 #include "BoomerAnimInstance.generated.h"
 
 /**
@@ -62,4 +63,7 @@ private:
 
 	UPROPERTY(BlueprintReadOnly, Category = "Movement", meta = (AllowPrivateAccess = "true"))
 	FTransform LeftHandTransform;
+
+	UPROPERTY(BlueprintReadOnly, Category = "Movement", meta = (AllowPrivateAccess = "true"))
+	ETurningInPlace TurningInPlace;
 };
