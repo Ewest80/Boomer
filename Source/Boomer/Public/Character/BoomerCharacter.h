@@ -65,7 +65,8 @@ public:
 	void SetOverlappingWeapon(AWeapon* Weapon);
 	bool IsWeaponEquipped();
 	bool IsAiming();
-
+	AWeapon* GetEquippedWeapon();
+	
 	FORCEINLINE float GetAOYaw() const { return AO_Yaw; }
-	FORCEINLINE float GetAOPitch() const { return AO_Pitch; }
+	FORCEINLINE float GetAOPitch() const { return AO_Pitch; }	
 };

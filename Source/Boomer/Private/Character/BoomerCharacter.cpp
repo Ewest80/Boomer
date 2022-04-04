@@ -279,3 +279,9 @@ bool ABoomerCharacter::IsAiming()
 {
 	return (Combat && Combat->bAiming);
 }
+
+AWeapon* ABoomerCharacter::GetEquippedWeapon()
+{
+	if (Combat == nullptr) return nullptr;
+	return Combat->EquippedWeapon;
+}

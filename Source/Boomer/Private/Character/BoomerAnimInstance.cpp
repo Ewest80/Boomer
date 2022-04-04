@@ -6,6 +6,7 @@
 #include "Character/BoomerCharacter.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "Weapon/Weapon.h"
 
 void UBoomerAnimInstance::NativeInitializeAnimation()
 {
@@ -31,6 +32,7 @@ void UBoomerAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 	bIsInAir = BoomerCharacter->GetCharacterMovement()->IsFalling();
 	bIsAccelerating = BoomerCharacter->GetCharacterMovement()->GetCurrentAcceleration().Size() > 0 ? true : false;
 	bWeaponEquipped = BoomerCharacter->IsWeaponEquipped();
+	EquippedWeapon = BoomerCharacter->GetEquippedWeapon();
 	bIsCrouched = BoomerCharacter->bIsCrouched;
 	bAiming = BoomerCharacter->IsAiming();
 
@@ -50,4 +52,17 @@ void UBoomerAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 
 	AO_Yaw = BoomerCharacter->GetAOYaw();
 	AO_Pitch = BoomerCharacter->GetAOPitch();
+
+	// Setup left hand to LeftHandWeaponSocket
+	if (bWeaponEquipped && EquippedWeapon && EquippedWeapon->GetWeaponMesh() && BoomerCharacter->GetMesh())
+	{
+		LeftHandTransform = EquippedWeapon->GetWeaponMesh()->GetSocketTransform(FName("LeftHandSocket"), RTS_World);
+
+		FVector OutPosition;
+		FRotator OutRotation;
+		BoomerCharacter->GetMesh()->TransformToBoneSpace(FName("hand_r"), LeftHandTransform.GetLocation(),
+		                                                 FRotator::ZeroRotator, OutPosition, OutRotation);
+		LeftHandTransform.SetLocation(OutPosition);
+		LeftHandTransform.SetRotation(FQuat(OutRotation));
+	}
 }
