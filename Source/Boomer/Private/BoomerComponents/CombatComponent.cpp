@@ -120,10 +120,10 @@ void UCombatComponent::TraceUnderCrosshairs(FHitResult& TraceHitResult)
 
 		GetWorld()->LineTraceSingleByChannel(TraceHitResult, Start, End, ECC_Visibility);
 
-		// if (!TraceHitResult.bBlockingHit)
-		// {
-		// 	TraceHitResult.ImpactPoint = End;
-		// }
+		if (!TraceHitResult.bBlockingHit)
+		{
+			TraceHitResult.ImpactPoint = End;
+		}
 	}
 	
 }
