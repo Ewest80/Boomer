@@ -62,6 +62,21 @@ void ABoomerCharacter::PostInitializeComponents()
 	}
 }
 
+void ABoomerCharacter::PlayFireMontage(bool bAiming)
+{
+	if (Combat == nullptr || Combat->EquippedWeapon == nullptr) { return; }
+
+	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+	if (AnimInstance && FireWeaponMontage)
+	{
+		AnimInstance->Montage_Play(FireWeaponMontage);
+		FName SectionName;
+		SectionName = bAiming ? FName("RifleAim") : FName("RifleHip");
+
+		AnimInstance->Montage_JumpToSection(SectionName);
+	}
+}
+
 void ABoomerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
@@ -85,6 +100,8 @@ void ABoomerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	PlayerInputComponent->BindAction("Crouch", IE_Pressed, this, &ABoomerCharacter::CrouchButtonPressed);
 	PlayerInputComponent->BindAction("Aim", IE_Pressed, this, &ABoomerCharacter::AimButtonPressed);
 	PlayerInputComponent->BindAction("Aim", IE_Released, this, &ABoomerCharacter::AimButtonReleased);
+	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &ABoomerCharacter::FireButtonPressed);
+	PlayerInputComponent->BindAction("Fire", IE_Released, this, &ABoomerCharacter::FireButtonReleased);
 
 	//Axis Mappings
 	PlayerInputComponent->BindAxis("MoveForward", this, &ABoomerCharacter::MoveForward);
@@ -200,39 +217,6 @@ void ABoomerCharacter::TurnInPlace(float DeltaTime)
 	}
 }
 
-// void ABoomerCharacter::AimOffset(float DeltaTime)
-// {
-// 	if (Combat && Combat->EquippedWeapon == nullptr) { return; }
-// 	
-// 	FVector Velocity = GetVelocity();
-// 	Velocity.Z = 0.f;
-// 	float Speed = Velocity.Size();
-// 	bool bIsInAir = GetCharacterMovement()->IsFalling();
-//
-// 	if (Speed == 0.f && !bIsInAir) // Standing still, not jumping
-// 	{
-// 		FRotator CurrentAimRotation = FRotator(0.f, GetBaseAimRotation().Yaw, 0.f);
-// 		FRotator DeltaAimRotation = UKismetMathLibrary::NormalizedDeltaRotator(CurrentAimRotation, StartingAimRotation);
-// 		AO_Yaw = DeltaAimRotation.Yaw;
-// 		bUseControllerRotationYaw = false;
-// 	}
-// 	if (Speed > 0.f || bIsInAir)  // Running or jumping
-// 	{
-// 		StartingAimRotation = FRotator(0.f, GetBaseAimRotation().Yaw, 0.f);
-// 		AO_Yaw = 0.f;
-// 		bUseControllerRotationYaw = true;
-// 	}
-// 	// Pitch
-// 	AO_Pitch = GetBaseAimRotation().Pitch;
-// 	if (AO_Pitch > 90.f && !IsLocallyControlled())
-// 	{
-// 		// map pitch from [270-360) to [-90-0)
-// 		FVector2d InRange(270.f, 360.f);
-// 		FVector2d OutRange(-90.f, 0.f);
-// 		AO_Pitch = FMath::GetMappedRangeValueClamped(InRange, OutRange, AO_Pitch);
-// 	}
-// }
-
 void ABoomerCharacter::EquipButtonPressed()
 {
 	if (Combat)
@@ -281,6 +265,22 @@ void ABoomerCharacter::AimButtonReleased()
 	if (Combat)
 	{
 		Combat->SetAiming(false);
+	}
+}
+
+void ABoomerCharacter::FireButtonPressed()
+{
+	if (Combat)
+	{
+		Combat->FireButtonPressed(true);
+	}
+}
+
+void ABoomerCharacter::FireButtonReleased()
+{
+	if (Combat)
+	{
+		Combat->FireButtonPressed(false);
 	}
 }
 
