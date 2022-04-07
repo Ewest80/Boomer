@@ -131,7 +131,7 @@ void AWeapon::Fire(const FVector& HitTarget)
 
 			if (World)
 			{
-				World->SpawnActor<ACasing>(CasingClass, SocketTransform.GetLocation(),SocketTransform.GetRotation().Rotator());
+				World->SpawnActor<ACasing>(CasingClass, SocketTransform.GetLocation(), SocketTransform.GetRotation().Rotator());
 			}
 		}
 	}
