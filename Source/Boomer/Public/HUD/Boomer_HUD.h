@@ -30,6 +30,9 @@ class BOOMER_API ABoomer_HUD : public AHUD
 public:
 	virtual void DrawHUD() override;
 
+protected:
+	void DrawCrosshair(UTexture2D* Texture, FVector2D ViewportCenter);
+
 private:
 	FHUDPackage HUDPackage;
 
