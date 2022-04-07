@@ -328,3 +328,10 @@ AWeapon* ABoomerCharacter::GetEquippedWeapon()
 	if (Combat == nullptr) return nullptr;
 	return Combat->EquippedWeapon;
 }
+
+FVector ABoomerCharacter::GetHitTarget() const
+{
+	if (Combat == nullptr) return FVector();
+
+	return Combat->HitTarget;
+}
