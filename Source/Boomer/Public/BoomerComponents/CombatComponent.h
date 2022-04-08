@@ -71,6 +71,8 @@ private:
 	float CrosshairAimFactor;
 	UPROPERTY(EditAnywhere)
 	float CrosshairShootingFactor;
+	float CrosshairOverPlayerFactor;
+	bool bCrosshairOverPlayer;
 	FHUDPackage HUDPackage;
 
 	FVector HitTarget;
