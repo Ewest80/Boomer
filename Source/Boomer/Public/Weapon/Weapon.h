@@ -27,6 +27,15 @@ public:
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 	void ShowPickupWidget(bool bShowWidget);
 	virtual void Fire(const FVector& HitTarget);
+
+	/**
+	 *	Automatic Fire
+	 */
+	UPROPERTY(EditAnywhere, Category = "Combat")
+	float FireDelay = .15f;
+
+	UPROPERTY(EditAnywhere, Category = "Combat")
+	bool bIsAutomatic = true;
 	
 protected:
 	virtual void BeginPlay() override;
