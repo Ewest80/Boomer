@@ -3,6 +3,7 @@
 
 #include "Character/BoomerCharacter.h"
 
+#include "Boomer/Boomer.h"
 #include "BoomerComponents/CombatComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
@@ -37,9 +38,10 @@ ABoomerCharacter::ABoomerCharacter()
 	Combat->SetIsReplicated(true);
 
 	GetCharacterMovement()->NavAgentProps.bCanCrouch = true;
-	GetCapsuleComponent()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Camera, ECR_Ignore);
-	GetMesh()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Camera, ECR_Ignore);
-	GetMesh()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Visibility, ECR_Block);
+	GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
+	GetMesh()->SetCollisionObjectType(ECC_SkeletalMesh);
+	GetMesh()->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
+	GetMesh()->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
 	GetCharacterMovement()->RotationRate = FRotator(0.f, 0.f, 850.f);
 
 	TurningInPlace = ETurningInPlace::ETIP_NotTurning;
@@ -78,6 +80,20 @@ void ABoomerCharacter::PlayFireMontage(bool bAiming)
 	}
 }
 
+void ABoomerCharacter::PlayHitReactMontage()
+{
+	if (Combat == nullptr || Combat->EquippedWeapon == nullptr) { return; }
+
+	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+	if (AnimInstance && HitReactMontage)
+	{
+		AnimInstance->Montage_Play(HitReactMontage);
+		FName SectionName("FromFront");
+
+		AnimInstance->Montage_JumpToSection(SectionName);
+	}
+}
+
 void ABoomerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
@@ -89,7 +105,7 @@ void ABoomerCharacter::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 	AimOffset(DeltaTime);
-	HideCameraIfCharacterClose();
+	HideCharacterIfCameraClose();
 }
 
 void ABoomerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -286,7 +302,12 @@ void ABoomerCharacter::FireButtonReleased()
 	}
 }
 
-void ABoomerCharacter::HideCameraIfCharacterClose()
+void ABoomerCharacter::MultiCastHit_Implementation()
+{
+	PlayHitReactMontage();
+}
+
+void ABoomerCharacter::HideCharacterIfCameraClose()
 {
 	if (!IsLocallyControlled()) return;
 	if ((FollowCamera->GetComponentLocation() - GetActorLocation()).Size() < CameraThreshold)

@@ -22,6 +22,9 @@ public:
 
 	void PlayFireMontage(bool bAiming);
 
+	UFUNCTION(NetMulticast, Unreliable)
+	void MultiCastHit();
+
 protected:
 	virtual void BeginPlay() override;
 
@@ -39,6 +42,8 @@ protected:
 	void LookUp(float Value);
 
 	void AimOffset(float DeltaTime);
+
+	void PlayHitReactMontage();
 
 private:
 	UPROPERTY(VisibleAnywhere, Category = "Camera")
@@ -74,7 +79,10 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Combat")
 	UAnimMontage* FireWeaponMontage;
 
-	void HideCameraIfCharacterClose();
+	UPROPERTY(EditAnywhere, Category = "Combat")
+	UAnimMontage* HitReactMontage;
+
+	void HideCharacterIfCameraClose();
 
 	UPROPERTY(EditAnywhere)
 	float CameraThreshold = 200.f;
