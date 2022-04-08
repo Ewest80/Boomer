@@ -54,6 +54,7 @@ void ABoomerCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Out
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
 	DOREPLIFETIME_CONDITION(ABoomerCharacter, OverlappingWeapon, COND_OwnerOnly);
+	DOREPLIFETIME(ABoomerCharacter, Health);
 }
 
 void ABoomerCharacter::PostInitializeComponents()
@@ -399,6 +400,11 @@ void ABoomerCharacter::HideCharacterIfCameraClose()
 		}
 	}
 
+}
+
+void ABoomerCharacter::OnRep_Health()
+{
+	
 }
 
 void ABoomerCharacter::SetOverlappingWeapon(AWeapon* Weapon)

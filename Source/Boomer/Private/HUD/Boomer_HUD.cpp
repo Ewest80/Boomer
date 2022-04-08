@@ -3,10 +3,30 @@
 
 #include "HUD/Boomer_HUD.h"
 
+#include "Blueprint/UserWidget.h"
+#include "HUD/CharacterOverlay.h"
+
+void ABoomer_HUD::BeginPlay()
+{
+	Super::BeginPlay();
+
+	AddCharacterOverlay();
+}
+
+void ABoomer_HUD::AddCharacterOverlay()
+{
+	APlayerController* PlayerController = GetOwningPlayerController();
+	if (PlayerController && CharacterOverlayClass)
+	{
+		CharacterOverlay = CreateWidget<UCharacterOverlay>(PlayerController, CharacterOverlayClass);
+		CharacterOverlay->AddToViewport();
+	}
+}
+
 void ABoomer_HUD::DrawHUD()
 {
 	Super::DrawHUD();
-
+	
 	FVector2D ViewportSize;
 	if (GEngine)
 	{
