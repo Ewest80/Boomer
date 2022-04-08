@@ -36,6 +36,7 @@ void UBoomerAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 	bIsCrouched = BoomerCharacter->bIsCrouched;
 	bAiming = BoomerCharacter->IsAiming();
 	TurningInPlace = BoomerCharacter->GetTurningInPlace();
+	bRotateRootbone = BoomerCharacter->ShouldRotateRootBone();
 
 	// Offset Yaw for Strafing
 	FRotator AimRotation = BoomerCharacter->GetBaseAimRotation();
