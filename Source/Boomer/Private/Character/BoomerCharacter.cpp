@@ -12,6 +12,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Net/UnrealNetwork.h"
+#include "PlayerController/Boomer_PlayerController.h"
 #include "Weapon/Weapon.h"
 
 // Sets default values
@@ -77,7 +78,12 @@ void ABoomerCharacter::OnRep_ReplicatedMovement()
 void ABoomerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	BoomerPlayerController = Cast<ABoomer_PlayerController>(Controller);
+	if (BoomerPlayerController)
+	{
+		BoomerPlayerController->SetHUDHealth(Health, MaxHealth);
+	}
 }
 
 void ABoomerCharacter::Tick(float DeltaTime)

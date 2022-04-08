@@ -112,6 +112,8 @@ private:
 
 	UFUNCTION()
 	void OnRep_Health();
+
+	class ABoomer_PlayerController* BoomerPlayerController;
 	
 public:	
 	void SetOverlappingWeapon(AWeapon* Weapon);

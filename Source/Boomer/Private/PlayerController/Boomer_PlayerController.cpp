@@ -3,3 +3,31 @@
 
 #include "PlayerController/Boomer_PlayerController.h"
 
+#include "Components/ProgressBar.h"
+#include "Components/TextBlock.h"
+#include "HUD/Boomer_HUD.h"
+#include "HUD/CharacterOverlay.h"
+
+void ABoomer_PlayerController::BeginPlay()
+{
+	Super::BeginPlay();
+
+	BoomerHUD = Cast<ABoomer_HUD>(GetHUD());
+}
+
+void ABoomer_PlayerController::SetHUDHealth(float Health, float MaxHealth)
+{
+	BoomerHUD = BoomerHUD == nullptr ? Cast<ABoomer_HUD>(GetHUD()) : BoomerHUD;
+
+	bool bHUDValid = BoomerHUD &&
+		BoomerHUD->CharacterOverlay &&
+		BoomerHUD->CharacterOverlay->HealthBar &&
+		BoomerHUD->CharacterOverlay->HealthText;
+	if (bHUDValid)
+	{
+		const float HealthPercentage = Health / MaxHealth;
+		BoomerHUD->CharacterOverlay->HealthBar->SetPercent(HealthPercentage);
+		FString HealthText = FString::Printf(TEXT("%d / %d"), FMath::CeilToInt(Health), FMath::CeilToInt(MaxHealth));
+		BoomerHUD->CharacterOverlay->HealthText->SetText(FText::FromString(HealthText));
+	}
+}
