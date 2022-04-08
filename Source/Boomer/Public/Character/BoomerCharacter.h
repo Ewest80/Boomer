@@ -5,10 +5,11 @@
 #include "CoreMinimal.h"
 #include "BoomerTypes/TurningInPlace.h"
 #include "GameFramework/Character.h"
+#include "Interfaces/InteractWithCrosshairsInterface.h"
 #include "BoomerCharacter.generated.h"
 
 UCLASS()
-class BOOMER_API ABoomerCharacter : public ACharacter
+class BOOMER_API ABoomerCharacter : public ACharacter, public IInteractWithCrosshairsInterface
 {
 	GENERATED_BODY()
 
