@@ -89,6 +89,7 @@ void ABoomerCharacter::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 	AimOffset(DeltaTime);
+	HideCameraIfCharacterClose();
 }
 
 void ABoomerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -283,6 +284,28 @@ void ABoomerCharacter::FireButtonReleased()
 	{
 		Combat->FireButtonPressed(false);
 	}
+}
+
+void ABoomerCharacter::HideCameraIfCharacterClose()
+{
+	if (!IsLocallyControlled()) return;
+	if ((FollowCamera->GetComponentLocation() - GetActorLocation()).Size() < CameraThreshold)
+	{
+		GetMesh()->SetVisibility(false);
+		if (Combat && Combat->EquippedWeapon && Combat->EquippedWeapon->GetWeaponMesh())
+		{
+			Combat->EquippedWeapon->GetWeaponMesh()->bOwnerNoSee = true;
+		}
+	}
+	else
+	{
+		GetMesh()->SetVisibility(true);
+		if (Combat && Combat->EquippedWeapon && Combat->EquippedWeapon->GetWeaponMesh())
+		{
+			Combat->EquippedWeapon->GetWeaponMesh()->bOwnerNoSee = false;
+		}
+	}
+
 }
 
 void ABoomerCharacter::SetOverlappingWeapon(AWeapon* Weapon)
