@@ -88,6 +88,15 @@ private:
 
 	UPROPERTY(EditAnywhere, Category = "Crosshairs")
 	UTexture2D* CrosshairsBottom;
+
+	/**
+	 *	Zoomed FOV while aiming
+	 */
+	UPROPERTY(EditAnywhere)
+	float ZoomedFOV = 30.f;
+
+	UPROPERTY(EditAnywhere)
+	float ZoomInterpSpeed = 20.f;
 	
 public:	
 	void SetWeaponState(EWeaponState State);
@@ -99,4 +108,6 @@ public:
 	FORCEINLINE UTexture2D* GetCrosshairsRight() const { return CrosshairsRight; }
 	FORCEINLINE UTexture2D* GetCrosshairsTop() const { return CrosshairsTop; }
 	FORCEINLINE UTexture2D* GetCrosshairsBottom() const	{ return CrosshairsBottom; }
+	FORCEINLINE float GetZoomedFOV() const { return ZoomedFOV; }
+	FORCEINLINE float GetZoomInterpSpeed() const { return ZoomInterpSpeed; }
 };
