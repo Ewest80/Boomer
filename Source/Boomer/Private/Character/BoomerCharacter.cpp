@@ -108,8 +108,10 @@ void ABoomerCharacter::Tick(float DeltaTime)
 	HideCharacterIfCameraClose();
 }
 
-void ABoomerCharacter::Elim()
+void ABoomerCharacter::Elim_Implementation()
 {
+	bIsEliminated = true;
+	PlayElimMontage();
 }
 
 void ABoomerCharacter::PlayFireMontage(bool bAiming)
@@ -124,6 +126,15 @@ void ABoomerCharacter::PlayFireMontage(bool bAiming)
 		SectionName = bAiming ? FName("RifleAim") : FName("RifleHip");
 
 		AnimInstance->Montage_JumpToSection(SectionName);
+	}
+}
+
+void ABoomerCharacter::PlayElimMontage()
+{
+	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+	if (AnimInstance && ElimMontage)
+	{
+		AnimInstance->Montage_Play(ElimMontage);
 	}
 }
 
