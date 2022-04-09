@@ -16,5 +16,6 @@ class BOOMER_API ABoomerGameMode : public AGameMode
 
 public:
 	virtual void PlayerEliminated(class ABoomerCharacter* ElimCharacter, class ABoomer_PlayerController* VictimController, ABoomer_PlayerController* AttackerController);
+	virtual void RequestRespawn(ACharacter* ElimmedCharacter, AController* ElimmedController);
 	
 };

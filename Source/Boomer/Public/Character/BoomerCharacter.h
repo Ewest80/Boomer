@@ -23,8 +23,9 @@ public:
 	void PlayElimMontage();
 	virtual void OnRep_ReplicatedMovement() override;
 
-	UFUNCTION(NetMulticast, Reliable)
 	void Elim();
+	UFUNCTION(NetMulticast, Reliable)
+	void MulticastElim();
 
 protected:
 	virtual void BeginPlay() override;
@@ -107,8 +108,7 @@ private:
 
 	/**
 	 *	Player Health
-	 */
-
+	 ***************************/
 	UPROPERTY(EditAnywhere, Category = "Player Stats");
 	float MaxHealth = 100.f;
 
@@ -117,10 +117,17 @@ private:
 
 	UFUNCTION()
 	void OnRep_Health();
+	/*****************************/
 
 	class ABoomer_PlayerController* BoomerPlayerController;
 	
-	bool bIsEliminated = false;
+	bool bElimmed = false;
+	FTimerHandle ElimTimer;
+	
+	UPROPERTY(EditDefaultsOnly)
+	float ElimDelay = 3.f;
+
+	void ElimTimerFinished();
 	
 public:	
 	void SetOverlappingWeapon(AWeapon* Weapon);
@@ -134,5 +141,5 @@ public:
 	FORCEINLINE ETurningInPlace GetTurningInPlace() const { return TurningInPlace; }
 	FORCEINLINE UCameraComponent* GetFollowCamera() const { return FollowCamera; }
 	FORCEINLINE bool ShouldRotateRootBone() const { return bRotateRootBone; }
-	FORCEINLINE bool GetIsEliminated() const { return bIsEliminated; }
+	FORCEINLINE bool IsElimmed() const { return bElimmed; }
 };

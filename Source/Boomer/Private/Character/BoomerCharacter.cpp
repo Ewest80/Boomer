@@ -108,10 +108,25 @@ void ABoomerCharacter::Tick(float DeltaTime)
 	HideCharacterIfCameraClose();
 }
 
-void ABoomerCharacter::Elim_Implementation()
+void ABoomerCharacter::Elim()
 {
-	bIsEliminated = true;
+	MulticastElim();
+	GetWorldTimerManager().SetTimer(ElimTimer, this, &ABoomerCharacter::ElimTimerFinished, ElimDelay);
+}
+
+void ABoomerCharacter::MulticastElim_Implementation()
+{
+	bElimmed = true;
 	PlayElimMontage();
+}
+
+void ABoomerCharacter::ElimTimerFinished()
+{
+	ABoomerGameMode* BoomerGameMode = GetWorld()->GetAuthGameMode<ABoomerGameMode>();
+	if (BoomerGameMode)
+	{
+		BoomerGameMode->RequestRespawn(this, Controller);
+	}
 }
 
 void ABoomerCharacter::PlayFireMontage(bool bAiming)
