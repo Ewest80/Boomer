@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "BoomerTypes/TurningInPlace.h"
+#include "Components/TimelineComponent.h"
 #include "GameFramework/Character.h"
 #include "Interfaces/InteractWithCrosshairsInterface.h"
 #include "BoomerCharacter.generated.h"
@@ -117,8 +118,7 @@ private:
 
 	UFUNCTION()
 	void OnRep_Health();
-	/*****************************/
-
+	
 	class ABoomer_PlayerController* BoomerPlayerController;
 	
 	bool bElimmed = false;
@@ -128,6 +128,29 @@ private:
 	float ElimDelay = 3.f;
 
 	void ElimTimerFinished();
+
+	/**
+	 *	Dissolve Effect
+	 */
+
+	UPROPERTY(VisibleAnywhere)
+	UTimelineComponent* DissolveTimeline;
+	FOnTimelineFloat DissolveTrack;
+
+	UPROPERTY(EditAnywhere)
+	UCurveFloat* DissolveCurve;
+
+	UFUNCTION()
+	void UpdateDissolveMaterial(float DissolveValue);
+	void StartDissolve();
+
+	// Dynamic instance we can change at runtime
+	UPROPERTY(VisibleAnywhere, Category = Elim)
+	UMaterialInstanceDynamic* DynamicDissolveMaterialInstance;
+
+	// Material instance set on the Blueprint, used with the dynamic material instance
+	UPROPERTY(EditAnywhere, Category = Elim)
+	UMaterialInstance* DissolveMaterialInstance;
 	
 public:	
 	void SetOverlappingWeapon(AWeapon* Weapon);
