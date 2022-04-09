@@ -10,6 +10,7 @@
 #include "Components/WidgetComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "GameMode/BoomerGameMode.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Net/UnrealNetwork.h"
 #include "PlayerController/Boomer_PlayerController.h"
@@ -107,6 +108,10 @@ void ABoomerCharacter::Tick(float DeltaTime)
 	HideCharacterIfCameraClose();
 }
 
+void ABoomerCharacter::Elim()
+{
+}
+
 void ABoomerCharacter::PlayFireMontage(bool bAiming)
 {
 	if (Combat == nullptr || Combat->EquippedWeapon == nullptr) { return; }
@@ -142,6 +147,18 @@ void ABoomerCharacter::RecieveDamage(AActor* DamagedActor, float Damage, const U
 	Health = FMath::Clamp(Health - Damage, 0.f, MaxHealth);
 	UpdateHUDHealth();
 	PlayHitReactMontage();
+
+	if (Health == 0.f)
+	{
+		ABoomerGameMode* BoomerGameMode = GetWorld()->GetAuthGameMode<ABoomerGameMode>();
+		if (BoomerGameMode)
+		{
+			BoomerPlayerController = BoomerPlayerController == nullptr ? Cast<ABoomer_PlayerController>(Controller) : BoomerPlayerController;
+			ABoomer_PlayerController* AttackerController = Cast<ABoomer_PlayerController>(InstigatorController);
+			BoomerGameMode->PlayerEliminated(this, BoomerPlayerController, AttackerController);
+		}
+	}
+	
 }
 
 void ABoomerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
