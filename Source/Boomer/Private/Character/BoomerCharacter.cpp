@@ -79,10 +79,10 @@ void ABoomerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
-	BoomerPlayerController = Cast<ABoomer_PlayerController>(Controller);
-	if (BoomerPlayerController)
+	UpdateHUDHealth();
+	if (HasAuthority())
 	{
-		BoomerPlayerController->SetHUDHealth(Health, MaxHealth);
+		OnTakeAnyDamage.AddDynamic(this, &ABoomerCharacter::RecieveDamage);
 	}
 }
 
@@ -134,6 +134,14 @@ void ABoomerCharacter::PlayHitReactMontage()
 
 		AnimInstance->Montage_JumpToSection(SectionName);
 	}
+}
+
+void ABoomerCharacter::RecieveDamage(AActor* DamagedActor, float Damage, const UDamageType* DamageType,
+	AController* InstigatorController, AActor* DamageCauser)
+{
+	Health = FMath::Clamp(Health - Damage, 0.f, MaxHealth);
+	UpdateHUDHealth();
+	PlayHitReactMontage();
 }
 
 void ABoomerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -381,11 +389,6 @@ void ABoomerCharacter::FireButtonReleased()
 	}
 }
 
-void ABoomerCharacter::MultiCastHit_Implementation()
-{
-	PlayHitReactMontage();
-}
-
 void ABoomerCharacter::HideCharacterIfCameraClose()
 {
 	if (!IsLocallyControlled()) return;
@@ -410,7 +413,17 @@ void ABoomerCharacter::HideCharacterIfCameraClose()
 
 void ABoomerCharacter::OnRep_Health()
 {
-	
+	UpdateHUDHealth();
+	PlayHitReactMontage();
+}
+
+void ABoomerCharacter::UpdateHUDHealth()
+{
+	BoomerPlayerController = BoomerPlayerController == nullptr ? Cast<ABoomer_PlayerController>(Controller) : BoomerPlayerController;
+	if (BoomerPlayerController)
+	{
+		BoomerPlayerController->SetHUDHealth(Health, MaxHealth);
+	}
 }
 
 void ABoomerCharacter::SetOverlappingWeapon(AWeapon* Weapon)
