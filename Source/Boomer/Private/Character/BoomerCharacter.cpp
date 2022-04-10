@@ -6,14 +6,18 @@
 #include "Boomer/Boomer.h"
 #include "BoomerComponents/CombatComponent.h"
 #include "Camera/CameraComponent.h"
+#include "Chaos/ParticleHandle.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/WidgetComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "GameMode/BoomerGameMode.h"
+#include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Net/UnrealNetwork.h"
+#include "Particles/ParticleSystemComponent.h"
 #include "PlayerController/Boomer_PlayerController.h"
+#include "Sound/SoundCue.h"
 #include "Weapon/Weapon.h"
 
 // Sets default values
@@ -146,6 +150,17 @@ void ABoomerCharacter::MulticastElim_Implementation()
 	//Disable Collision
 	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	GetMesh()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+	// Spawn Elim Bot
+	if (ElimBotEffect)
+	{
+		FVector ElimBotSpawnPoint(GetActorLocation().X, GetActorLocation().Y, GetActorLocation().Z + 200.f);
+		ElimBotComponent = UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ElimBotEffect, ElimBotSpawnPoint, GetActorRotation());
+		if (ElimBotSound)
+		{
+			UGameplayStatics::SpawnSoundAtLocation(this, ElimBotSound, GetActorLocation());
+		}
+	}
 }
 
 void ABoomerCharacter::UpdateDissolveMaterial(float DissolveValue)
@@ -172,6 +187,16 @@ void ABoomerCharacter::ElimTimerFinished()
 	if (BoomerGameMode)
 	{
 		BoomerGameMode->RequestRespawn(this, Controller);
+	}
+}
+
+void ABoomerCharacter::Destroyed()
+{
+	Super::Destroyed();
+
+	if (ElimBotComponent)
+	{
+		ElimBotComponent->DestroyComponent();
 	}
 }
 
