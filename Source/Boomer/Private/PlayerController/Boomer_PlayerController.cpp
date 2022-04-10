@@ -3,6 +3,7 @@
 
 #include "PlayerController/Boomer_PlayerController.h"
 
+#include "Character/BoomerCharacter.h"
 #include "Components/ProgressBar.h"
 #include "Components/TextBlock.h"
 #include "HUD/Boomer_HUD.h"
@@ -13,6 +14,17 @@ void ABoomer_PlayerController::BeginPlay()
 	Super::BeginPlay();
 
 	BoomerHUD = Cast<ABoomer_HUD>(GetHUD());
+}
+
+void ABoomer_PlayerController::OnPossess(APawn* InPawn)
+{
+	Super::OnPossess(InPawn);
+
+	ABoomerCharacter* BoomerCharacter = Cast<ABoomerCharacter>(InPawn);
+	if (BoomerCharacter)
+	{
+		SetHUDHealth(BoomerCharacter->GetHealth(), BoomerCharacter->GetMaxHealth());
+	}
 }
 
 void ABoomer_PlayerController::SetHUDHealth(float Health, float MaxHealth)
