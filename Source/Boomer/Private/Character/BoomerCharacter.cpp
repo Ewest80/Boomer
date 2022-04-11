@@ -128,6 +128,10 @@ void ABoomerCharacter::Elim()
 
 void ABoomerCharacter::MulticastElim_Implementation()
 {
+	if (BoomerPlayerController)
+	{
+		BoomerPlayerController->SetHUDWeaponAmmo(0);
+	}
 	bElimmed = true;
 	PlayElimMontage();
 

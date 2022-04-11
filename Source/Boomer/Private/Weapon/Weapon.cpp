@@ -8,6 +8,7 @@
 #include "Components/WidgetComponent.h"
 #include "Engine/SkeletalMeshSocket.h"
 #include "Net/UnrealNetwork.h"
+#include "PlayerController/Boomer_PlayerController.h"
 #include "Weapon/Casing.h"
 
 // Sets default values
@@ -60,6 +61,7 @@ void AWeapon::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeP
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
 	DOREPLIFETIME(AWeapon, WeaponState);
+	DOREPLIFETIME(AWeapon, Ammo);
 }
 
 void AWeapon::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
@@ -79,6 +81,44 @@ void AWeapon::OnSphereEndOverlap(UPrimitiveComponent* OverlappedComponent, AActo
 	if (BoomerCharacter)
 	{
 		BoomerCharacter->SetOverlappingWeapon(nullptr);
+	}
+}
+
+void AWeapon::SpendRound()
+{
+	--Ammo;
+	SetHUDAmmo();
+}
+
+void AWeapon::OnRep_Ammo()
+{
+	SetHUDAmmo();
+}
+
+void AWeapon::OnRep_Owner()
+{
+	Super::OnRep_Owner();
+	if (Owner == nullptr)
+	{
+		BoomerOwnerCharacter = nullptr;
+		BoomerOwnerController = nullptr;
+	}
+	else
+	{
+		SetHUDAmmo();
+	}
+}
+
+void AWeapon::SetHUDAmmo()
+{
+	BoomerOwnerCharacter = BoomerOwnerCharacter == nullptr ? Cast<ABoomerCharacter>(GetOwner()) : BoomerOwnerCharacter;
+	if (BoomerOwnerCharacter)
+	{
+		BoomerOwnerController = BoomerOwnerController == nullptr ? Cast<ABoomer_PlayerController>(BoomerOwnerCharacter->Controller) : BoomerOwnerController;
+		if (BoomerOwnerController)
+		{
+			BoomerOwnerController->SetHUDWeaponAmmo(Ammo);
+		}
 	}
 }
 
@@ -155,6 +195,7 @@ void AWeapon::Fire(const FVector& HitTarget)
 			}
 		}
 	}
+	SpendRound();
 }
 
 void AWeapon::Drop()
@@ -163,5 +204,7 @@ void AWeapon::Drop()
 	FDetachmentTransformRules DetachRules(EDetachmentRule::KeepWorld, true);
 	WeaponMesh->DetachFromComponent(DetachRules);
 	SetOwner(nullptr);
+	BoomerOwnerCharacter = nullptr;
+	BoomerOwnerController = nullptr;
 }
 
