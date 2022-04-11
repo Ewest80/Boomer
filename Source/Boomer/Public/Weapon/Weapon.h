@@ -138,4 +138,5 @@ public:
 	FORCEINLINE UTexture2D* GetCrosshairsBottom() const	{ return CrosshairsBottom; }
 	FORCEINLINE float GetZoomedFOV() const { return ZoomedFOV; }
 	FORCEINLINE float GetZoomInterpSpeed() const { return ZoomInterpSpeed; }
+	bool IsEmpty();
 };
