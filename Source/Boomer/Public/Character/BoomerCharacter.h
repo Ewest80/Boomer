@@ -19,9 +19,17 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
-	virtual void PostInitializeComponents() override;
+	virtual void PostInitializeComponents() override;////
+
+	/**
+	 *	Play Montages
+	 */
+	
 	void PlayFireMontage(bool bAiming);
+	void PlayReloadMontage();
 	void PlayElimMontage();
+	void PlayHitReactMontage();
+	
 	virtual void OnRep_ReplicatedMovement() override;
 
 	void Elim();
@@ -39,6 +47,7 @@ protected:
 	void AimButtonReleased();
 	void FireButtonPressed();
 	void FireButtonReleased();
+	void ReloadButtonPressed();
 	
 	void MoveForward(float Value);
 	void MoveRight(float Value);
@@ -48,8 +57,7 @@ protected:
 
 	void AimOffset(float DeltaTime);
 	void SimProxiesTurn();
-
-	void PlayHitReactMontage();
+	
 	UFUNCTION()
 	void RecieveDamage(AActor* DamagedActor, float Damage, const UDamageType* DamageType, class AController* InstigatorController, AActor* DamageCauser);
 	void UpdateHUDHealth();
@@ -87,15 +95,23 @@ private:
 	ETurningInPlace TurningInPlace;
 	void TurnInPlace(float DeltaTime);
 
+	/**
+	*  Animation Montages
+	*/
+	
 	UPROPERTY(EditAnywhere, Category = "Combat")
 	UAnimMontage* FireWeaponMontage;
 
+	UPROPERTY(EditAnywhere, Category = "Combat")
+	UAnimMontage* ReloadMontage;
+	
 	UPROPERTY(EditAnywhere, Category = "Combat")
 	UAnimMontage* HitReactMontage;
 
 	UPROPERTY(EditAnywhere, Category = "Combat")
 	UAnimMontage* ElimMontage;
-	
+
+	// Hide character and gun when too close to objects
 	void HideCharacterIfCameraClose();
 
 	UPROPERTY(EditAnywhere)
