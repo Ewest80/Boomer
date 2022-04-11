@@ -86,3 +86,17 @@ void ABoomer_PlayerController::SetHUDWeaponAmmo(int32 Ammo)
 		BoomerHUD->CharacterOverlay->WeaponAmmoAmount->SetText(FText::FromString(WeaponAmmoText));
 	}
 }
+
+void ABoomer_PlayerController::SetHUDCarriedAmmo(int32 Ammo)
+{
+	BoomerHUD = BoomerHUD == nullptr ? Cast<ABoomer_HUD>(GetHUD()) : BoomerHUD;
+	
+	bool bHUDValid = BoomerHUD &&
+		BoomerHUD->CharacterOverlay &&
+		BoomerHUD->CharacterOverlay->CarriedAmmoAmount;
+	if (bHUDValid)
+	{
+		FString CarriedAmmoText = FString::Printf(TEXT("%d"), Ammo);
+		BoomerHUD->CharacterOverlay->CarriedAmmoAmount->SetText(FText::FromString(CarriedAmmoText));
+	}
+}
