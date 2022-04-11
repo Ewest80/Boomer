@@ -58,3 +58,17 @@ void ABoomer_PlayerController::SetHUDScore(float Score)
 	}
 	
 }
+
+void ABoomer_PlayerController::SetHUDDefeats(int32 Defeats)
+{
+	BoomerHUD = BoomerHUD == nullptr ? Cast<ABoomer_HUD>(GetHUD()) : BoomerHUD;
+	
+	bool bHUDValid = BoomerHUD &&
+		BoomerHUD->CharacterOverlay &&
+		BoomerHUD->CharacterOverlay->DefeatsAmount;
+	if (bHUDValid)
+	{
+		FString DefeatsText = FString::Printf(TEXT("%d"), Defeats);
+		BoomerHUD->CharacterOverlay->DefeatsAmount->SetText(FText::FromString(DefeatsText));
+	}
+}

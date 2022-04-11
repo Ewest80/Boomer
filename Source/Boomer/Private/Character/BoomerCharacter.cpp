@@ -550,6 +550,7 @@ void ABoomerCharacter::PollInit()
 		if (BoomerPlayerState)
 		{
 			BoomerPlayerState->AddToScore(0.f);
+			BoomerPlayerState->AddToDefeats(0);
 		}
 	}
 }

@@ -29,8 +29,6 @@ public:
 	void MulticastElim();
 	virtual void Destroyed() override;
 
-	class ABoomerPlayerState* BoomerPlayerState;
-
 protected:
 	virtual void BeginPlay() override;
 
@@ -123,7 +121,8 @@ private:
 
 	UFUNCTION()
 	void OnRep_Health();
-	
+
+	UPROPERTY()
 	class ABoomer_PlayerController* BoomerPlayerController;
 	
 	bool bElimmed = false;
@@ -169,6 +168,9 @@ private:
 
 	UPROPERTY(EditAnywhere)
 	class USoundCue* ElimBotSound;
+
+	UPROPERTY()
+	class ABoomerPlayerState* BoomerPlayerState;
 	
 public:	
 	void SetOverlappingWeapon(AWeapon* Weapon);
