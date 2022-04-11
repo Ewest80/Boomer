@@ -17,6 +17,7 @@
 #include "Net/UnrealNetwork.h"
 #include "Particles/ParticleSystemComponent.h"
 #include "PlayerController/Boomer_PlayerController.h"
+#include "PlayerState/BoomerPlayerState.h"
 #include "Sound/SoundCue.h"
 #include "Weapon/Weapon.h"
 
@@ -112,6 +113,7 @@ void ABoomerCharacter::Tick(float DeltaTime)
 	}
 	
 	HideCharacterIfCameraClose();
+	PollInit();
 }
 
 void ABoomerCharacter::Elim()
@@ -537,6 +539,18 @@ void ABoomerCharacter::UpdateHUDHealth()
 	if (BoomerPlayerController)
 	{
 		BoomerPlayerController->SetHUDHealth(Health, MaxHealth);
+	}
+}
+
+void ABoomerCharacter::PollInit()
+{
+	if (BoomerPlayerState == nullptr)
+	{
+		BoomerPlayerState = GetPlayerState<ABoomerPlayerState>();
+		if (BoomerPlayerState)
+		{
+			BoomerPlayerState->AddToScore(0.f);
+		}
 	}
 }
 

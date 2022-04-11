@@ -43,3 +43,18 @@ void ABoomer_PlayerController::SetHUDHealth(float Health, float MaxHealth)
 		BoomerHUD->CharacterOverlay->HealthText->SetText(FText::FromString(HealthText));
 	}
 }
+
+void ABoomer_PlayerController::SetHUDScore(float Score)
+{
+	BoomerHUD = BoomerHUD == nullptr ? Cast<ABoomer_HUD>(GetHUD()) : BoomerHUD;
+	
+	bool bHUDValid = BoomerHUD &&
+		BoomerHUD->CharacterOverlay &&
+		BoomerHUD->CharacterOverlay->ScoreAmount;
+	if (bHUDValid)
+	{
+		FString ScoreText = FString::Printf(TEXT("%d"), FMath::FloorToInt(Score));
+		BoomerHUD->CharacterOverlay->ScoreAmount->SetText(FText::FromString(ScoreText));
+	}
+	
+}

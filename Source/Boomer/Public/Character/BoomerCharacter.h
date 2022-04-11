@@ -29,6 +29,8 @@ public:
 	void MulticastElim();
 	virtual void Destroyed() override;
 
+	class ABoomerPlayerState* BoomerPlayerState;
+
 protected:
 	virtual void BeginPlay() override;
 
@@ -53,6 +55,8 @@ protected:
 	UFUNCTION()
 	void RecieveDamage(AActor* DamagedActor, float Damage, const UDamageType* DamageType, class AController* InstigatorController, AActor* DamageCauser);
 	void UpdateHUDHealth();
+	// Poll for any relevant classes and initialize HUD
+	void PollInit();
 
 private:
 	UPROPERTY(VisibleAnywhere, Category = "Camera")

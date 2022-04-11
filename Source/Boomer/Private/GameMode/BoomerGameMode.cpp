@@ -6,10 +6,20 @@
 #include "Character/BoomerCharacter.h"
 #include "GameFramework/PlayerStart.h"
 #include "Kismet/GameplayStatics.h"
+#include "PlayerController/Boomer_PlayerController.h"
+#include "PlayerState/BoomerPlayerState.h"
 
 void ABoomerGameMode::PlayerEliminated(ABoomerCharacter* ElimCharacter, ABoomer_PlayerController* VictimController,
                                        ABoomer_PlayerController* AttackerController)
 {
+	ABoomerPlayerState* AttackerPlayerState = AttackerController ? Cast<ABoomerPlayerState>(AttackerController->PlayerState) : nullptr;
+	ABoomerPlayerState* VictimPlayerState = VictimController ? Cast<ABoomerPlayerState>(VictimController->PlayerState) : nullptr;
+
+	if (AttackerPlayerState && AttackerPlayerState != VictimPlayerState)
+	{
+		AttackerPlayerState->AddToScore(1.f);
+	}
+	
 	if (ElimCharacter)
 	{
 		ElimCharacter->Elim();
