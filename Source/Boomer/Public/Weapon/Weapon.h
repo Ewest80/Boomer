@@ -31,6 +31,7 @@ public:
 	void ShowPickupWidget(bool bShowWidget);
 	virtual void Fire(const FVector& HitTarget);
 	void Drop();
+	void AddAmmo(int32 AmmoToAdd);
 
 	/**
 	 *	Automatic Fire
@@ -134,14 +135,16 @@ public:
 	void SetWeaponState(EWeaponState State);
 	FORCEINLINE USphereComponent* GetAreaSphere() const { return AreaSphere; }
 	FORCEINLINE USkeletalMeshComponent* GetWeaponMesh() const { return WeaponMesh; }
-
+	FORCEINLINE float GetZoomedFOV() const { return ZoomedFOV; }
+	FORCEINLINE float GetZoomInterpSpeed() const { return ZoomInterpSpeed; }
+	bool IsEmpty();
+	FORCEINLINE EWeaponType GetWeaponType() const { return WeaponType; }
+	FORCEINLINE int32 GetAmmo() const { return Ammo; }
+	FORCEINLINE int32 GetMagCapacity() const { return MagCapacity; }
+	
 	FORCEINLINE UTexture2D* GetCrosshairsCenter() const { return CrosshairsCenter; }
 	FORCEINLINE UTexture2D* GetCrosshairsLeft() const { return CrosshairsLeft; }
 	FORCEINLINE UTexture2D* GetCrosshairsRight() const { return CrosshairsRight; }
 	FORCEINLINE UTexture2D* GetCrosshairsTop() const { return CrosshairsTop; }
 	FORCEINLINE UTexture2D* GetCrosshairsBottom() const	{ return CrosshairsBottom; }
-	FORCEINLINE float GetZoomedFOV() const { return ZoomedFOV; }
-	FORCEINLINE float GetZoomInterpSpeed() const { return ZoomInterpSpeed; }
-	bool IsEmpty();
-	FORCEINLINE EWeaponType GetWeaponType() const { return WeaponType; }
 };
